@@ -1,16 +1,47 @@
-import { TextInput, View, Text, StyleSheet } from "react-native";
+import { TextInput, View, Text, StyleSheet, Alert } from "react-native";
 import PrimaryButton from "../components/PrimaryButton";
+import { useState } from "react";
 
 function StartGameScreen() {
+  const [enteredNumber, setEnteredNumber] = useState("");
+
+  function numberInputHandler(enteredText) {
+    setEnteredNumber(enteredText);
+  }
+  function resetInputHandler(){
+    setEnteredNumber('');
+  }
+
+  function confirmInputHandler() {
+    const chosenNumber = parseInt(enteredNumber);
+    if (isNaN(chosenNumber) || chosenNumber <= 0 || chosenNumber > 99) {
+      //alert
+      Alert.alert(
+        "Invalid Input",
+        "Number has to be a number between 1 and 99",
+        [{ text: "Okay", style: "destructive", onPress: resetInputHandler }]
+      );
+      return;
+    }
+    console.log("NUM VALID");
+  }
   return (
     <View style={styles.main}>
-      <TextInput style={styles.input} maxLength={2} keyboardType="number-pad" autoCapitalize="none" autoCorrect={false}/>
+      <TextInput
+        style={styles.input}
+        maxLength={2}
+        keyboardType="number-pad"
+        autoCapitalize="none"
+        autoCorrect={false}
+        value={enteredNumber}
+        onChangeText={numberInputHandler}
+      />
       <View style={styles.buttonLayout}>
         <View style={styles.buttonLayoutContainer}>
-      <PrimaryButton>Reset</PrimaryButton>
+          <PrimaryButton onPress={resetInputHandler}>Reset</PrimaryButton>
         </View>
         <View style={styles.buttonLayoutContainer}>
-      <PrimaryButton>Confirm</PrimaryButton>
+          <PrimaryButton onPress={confirmInputHandler}>Confirm</PrimaryButton>
         </View>
       </View>
     </View>
@@ -18,35 +49,35 @@ function StartGameScreen() {
 }
 const styles = StyleSheet.create({
   main: {
-    backgroundColor:'#3b021f',
-    marginTop:100,
+    backgroundColor: "#3b021f",
+    marginTop: 100,
     alignItems: "center",
-    borderRadius:8,
+    borderRadius: 8,
     marginHorizontal: 24,
-    elevation:6,
-    shadowColor: 'black',
-    shadowOffset: {width:0, height:2},
+    elevation: 6,
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
     shadowRadius: 6,
-    shadowOpacity: 0.25
+    shadowOpacity: 0.25,
   },
-  input:{
+  input: {
     width: 70,
     height: 50,
     fontSize: 32,
-    borderBottomColor: '#ddb52f',
+    borderBottomColor: "#ddb52f",
     borderBottomWidth: 2,
-    color: '#ddb52f',
+    color: "#ddb52f",
     marginVertical: 8,
-    fontWeight: 'bold',
-    textAlign:'center'
+    fontWeight: "bold",
+    textAlign: "center",
   },
-  buttonLayout:{
-    flexDirection:'row',
-    marginBottom:5,
-    marginHorizontal:5
+  buttonLayout: {
+    flexDirection: "row",
+    marginBottom: 5,
+    marginHorizontal: 5,
   },
   buttonLayoutContainer: {
-    flex:1
-  }
+    flex: 1,
+  },
 });
 export default StartGameScreen;
