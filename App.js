@@ -1,30 +1,57 @@
-import { StyleSheet, Text, View,ImageBackground, SafeAreaView} from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ImageBackground,
+  SafeAreaView,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { StatusBar  } from "expo-status-bar";
+import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
+import { useFonts } from "expo-font";
+import AppLoading from 'expo-app-loading';
 
 import StartGameScreen from "./screens/StartGameScreen";
 import GameScreen from "./screens/GameScreen";
 import Colors from "./constants/colors";
-
+import GameOverScreen from "./screens/GameOverScreen";
 
 export default function App() {
   const [userNumber, setUserNumber] = useState();
+  const [gameOver, setGameOver] = useState(true);
 
-  function pickedNumberHandler(pickedNumber){
-    setUserNumber(pickedNumber)
+  const [fontsLoaded] = useFonts({
+    'open-sans': require('./fonts/OpenSans-Regular.ttf'),
+    'open-sans-bold': require('./fonts/OpenSans-Bold.ttf')
+  });
+
+  if(!fontsLoaded){
+    return <AppLoading/>
   }
 
-  let screen = <StartGameScreen onPickNumber={pickedNumberHandler}/>;
+  function pickedNumberHandler(pickedNumber) {
+    setUserNumber(pickedNumber);
+    setGameOver(false);
+  }
+  function gameOverHandler() {
+    setGameOver(true);
+  }
 
-  if(userNumber){
-    screen = <GameScreen/>
+  let screen = <StartGameScreen onPickNumber={pickedNumberHandler} />;
+
+  if (userNumber) {
+    screen = (
+      <GameScreen userNumber={userNumber} onGameOver={gameOverHandler} />
+    );
+  }
+  if (gameOver && userNumber) {
+    screen = <GameOverScreen />;
   }
 
   return (
     <LinearGradient
       colors={[Colors.accent, Colors.gamescreen500]}
-      style={styles.rootContainer} 
+      style={styles.rootContainer}
     >
       <ImageBackground
         source={require("./images/background.png")}
@@ -32,9 +59,7 @@ export default function App() {
         style={styles.rootContainer}
         imageStyle={styles.backgroundImg}
       >
-        <SafeAreaView style={styles.rootContainer}>
-        {screen}
-        </SafeAreaView>
+        <SafeAreaView style={styles.rootContainer}>{screen}</SafeAreaView>
       </ImageBackground>
     </LinearGradient>
   );
@@ -45,6 +70,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   backgroundImg: {
-    opacity: 0.15
-  }
+    opacity: 0.15,
+  },
 });

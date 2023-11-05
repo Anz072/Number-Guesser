@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   },
   btnText: {
     color: Colors.contrastBlack,
-    fontWeight: "600",
+    fontFamily: 'open-sans-bold',
     fontSize: 16,
   },
   //iOS

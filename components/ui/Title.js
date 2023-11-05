@@ -13,7 +13,10 @@ const styles = StyleSheet.create({
         color: Colors.contrastWhite,
         textAlign: 'center',
         borderWidth: 2,
-        borderColor: Colors.contrastWhite
+        paddingHorizontal:15,
+        paddingVertical:10,
+    fontFamily: 'open-sans-bold',
+    borderColor: Colors.contrastWhite
     }
 
 })
