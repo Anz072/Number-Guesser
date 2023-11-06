@@ -9,7 +9,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import { useFonts } from "expo-font";
-import AppLoading from 'expo-app-loading';
+import AppLoading from "expo-app-loading";
 
 import StartGameScreen from "./screens/StartGameScreen";
 import GameScreen from "./screens/GameScreen";
@@ -19,24 +19,29 @@ import GameOverScreen from "./screens/GameOverScreen";
 export default function App() {
   const [userNumber, setUserNumber] = useState();
   const [gameOver, setGameOver] = useState(true);
+  const [roundCount, setRoundCount] = useState(0);
 
   const [fontsLoaded] = useFonts({
-    'open-sans': require('./fonts/OpenSans-Regular.ttf'),
-    'open-sans-bold': require('./fonts/OpenSans-Bold.ttf')
+    "open-sans": require("./fonts/OpenSans-Regular.ttf"),
+    "open-sans-bold": require("./fonts/OpenSans-Bold.ttf"),
   });
 
-  if(!fontsLoaded){
-    return <AppLoading/>
+  if (!fontsLoaded) {
+    return <AppLoading />;
   }
 
   function pickedNumberHandler(pickedNumber) {
     setUserNumber(pickedNumber);
     setGameOver(false);
   }
-  function gameOverHandler() {
+  function gameOverHandler(roundNumber) {
     setGameOver(true);
+    setRoundCount(roundNumber);
   }
-
+  function newGameHandler() {
+    setUserNumber(null);
+    setRoundCount(0);
+  }
   let screen = <StartGameScreen onPickNumber={pickedNumberHandler} />;
 
   if (userNumber) {
@@ -45,7 +50,13 @@ export default function App() {
     );
   }
   if (gameOver && userNumber) {
-    screen = <GameOverScreen />;
+    screen = (
+      <GameOverScreen
+        rounds={roundCount}
+        userNumber={userNumber}
+        newGameHandler={newGameHandler}
+      />
+    );
   }
 
   return (
